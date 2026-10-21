@@ -22,19 +22,17 @@ async function seedKnowledge() {
     await mongoose.connect(process.env.MONGO_URI);
 
     const rawText = await fs.readFile(TXT_FILE, "utf8");
-
-    if (!text.trim()) {
-      throw new Error("The TXT file is empty");
-    }
     const text = cleanText(rawText);
+
     if (!text) {
-      throw new Error("No usable text found after cleaning");
+      throw new Error("The TXT file is empty");
     }
 
 
     const splitter = new RecursiveCharacterTextSplitter({
       chunkSize: 450,
       chunkOverlap: 90,
+      separators: ["\n\n","\n"," ",""]
     });
 
    

@@ -23,9 +23,17 @@ export const sendMessageStream = async ({ conversationId, message, onChunk, onEr
       },
       body: JSON.stringify({ conversationId, message , category: "portfolio_data" }),
     });
-
     if (!response.ok) {
-      throw new Error("Failed to connect to the chat stream.");
+      const errorData = await response.json();
+      
+      
+      const serverErrorMessage = errorData.message || "An unexpected error occurred.";
+
+
+      if (onError) {
+        onError(serverErrorMessage);
+      }
+      return;
     }
 
     const reader = response.body.getReader();
